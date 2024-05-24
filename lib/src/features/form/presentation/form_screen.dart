@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 class FormScreen extends StatelessWidget {
   // Attribute
-  // (keine)
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   // Konstruktor
-  const FormScreen({super.key});
+  FormScreen({super.key});
 
   // Methoden
   @override
@@ -14,6 +14,7 @@ class FormScreen extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(32.0),
         child: Form(
+          key: _formKey,
           child: Column(children: [
             TextFormField(
               decoration: const InputDecoration(
@@ -35,7 +36,20 @@ class FormScreen extends StatelessWidget {
             ),
             const SizedBox(height: 32),
             FilledButton(
-              onPressed: () {},
+              onPressed: () {
+                if (_formKey.currentState?.validate() ?? false) {
+                  // Form is valid, proceed with the action
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Form is valid!')),
+                  );
+                } else {
+                  // Form is not valid, show a message
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                        content: Text('Please correct the errors in the form')),
+                  );
+                }
+              },
               child: const Text("Login"),
             ),
           ]),
